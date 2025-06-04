@@ -29,8 +29,7 @@ This is a React Native mobile application built with Expo for a courier business
 
 ## 📂 Project Structure
 
-![order-form](https://github.com/user-attachments/assets/ea668a02-3e03-460e-92ac-548cab5f68c7)
-![order-summary](https://github.com/user-attachments/assets/47a6f963-8e8d-403b-b2bf-2829f1d235ad)
+![order-form](https://github.com/user-attachments/assets/ea668a02-3e03-460e-92ac-548cab5f68c7) ![order-summary](https://github.com/user-attachments/assets/47a6f963-8e8d-403b-b2bf-2829f1d235ad)
 
 ```
 NADIIA_A2/
