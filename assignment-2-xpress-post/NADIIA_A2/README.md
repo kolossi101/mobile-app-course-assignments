@@ -27,8 +27,7 @@ This is a React Native mobile application built with Expo for a courier business
 
 ## 🚀 Screenshots
 
-![](https://github.com/user-attachments/assets/ea668a02-3e03-460e-92ac-548cab5f68c7 | width=100)
-![](https://github.com/user-attachments/assets/47a6f963-8e8d-403b-b2bf-2829f1d235ad | width=100)
+![order-summary](https://github.com/user-attachments/assets/c8462e5e-984e-4433-9219-8b281d3279fb)
 
 ## 📂 Project Structure
 
