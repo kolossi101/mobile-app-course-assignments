@@ -8,6 +8,10 @@ This repo contains submission for Assignment 1 in **BTP610: Mobile App Developme
 2. Run `npm install`
 3. Start with `npx expo start`
 
+### 📺 Demo
+
+https://github.com/user-attachments/assets/901b99be-8e3a-47c9-91af-1579372123dd
+
 ## 🧱 Tech & Tools
 
 - **React Native** with **Expo CLI**
