@@ -31,7 +31,7 @@ export const getCurrentLocation = async () => {
     await requestLocationPermission();
 
     const location = await Location.getCurrentPositionAsync({
-      accuracy: Location.Accuracy.Highest,
+      accuracy: Location.Accuracy.High,
       timeout: 15000, // timeout is 15 seconds
       maximumAge: 10000, // accepting up to 10 seconds old cached location
     });

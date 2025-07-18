@@ -6,13 +6,34 @@ export const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+  },
+  header: {
+    marginTop: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    backgroundColor: '#f8f9fa',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
+  },
+  headerTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  headerSubtitle: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 4,
+  },
   mapContainer: {
     flex: 1,
   },
   map: {
-    flex: 1,
+    height: '94%',
   },
-  // Error container
   errorContainer: {
     flex: 1,
     justifyContent: 'center',
@@ -21,24 +42,98 @@ export const styles = StyleSheet.create({
     padding: 20,
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 20 : 20,
   },
-
   errorText: {
     fontSize: 16,
     color: '#e74c3c',
     textAlign: 'center',
     marginBottom: 20,
   },
-
   retryButton: {
     backgroundColor: '#3498db',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 5,
   },
-
   retryButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  markerContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  restaurantMarker: {
+    width: 35,
+    height: 35,
+    borderRadius: 15,
+    backgroundColor: '#FF6B6B',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#fff',
+  },
+  serviceMarker: {
+    width: 35,
+    height: 35,
+    borderRadius: 15,
+    backgroundColor: '#4ECDC4',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#fff',
+  },
+  markerText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalCard: {
+    width: '85%',
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 24,
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#333',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  modalSubtitle: {
+    fontSize: 16,
+    color: '#555',
+    marginBottom: 6,
+    textAlign: 'center',
+  },
+  modalCategory: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#748DAE',
+    marginBottom: 20,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+    textAlign: 'center',
+  },
+  closeButton: {
+    marginTop: 16,
+    backgroundColor: '#748DAE',
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    width: '100%',
+    alignItems: 'center',
+  },
+  buttonText: {
+    fontSize: 16,
+    color: '#fff',
+    fontWeight: '600',
   },
 });

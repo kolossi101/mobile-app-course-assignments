@@ -10,8 +10,6 @@ export default function App() {
         backgroundColor="#fff"
         translucent={Platform.OS === 'android'}
       />
-
-      {/* Main map component */}
       <MapComponent />
     </SafeAreaView>
   );

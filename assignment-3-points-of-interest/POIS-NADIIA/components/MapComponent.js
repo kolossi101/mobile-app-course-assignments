@@ -1,16 +1,21 @@
 import { useState, useEffect, useRef } from 'react';
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import MapView from 'react-native-maps';
 import { styles } from '../styles/styles';
 import { MESSAGES, MAP_CONFIG } from '../utils/constants';
 import { getCurrentLocation } from '../services/locationService';
+import { fetchPOIs } from '../services/geoApifyService';
+import POIMarker from './POIMarker';
+import POIDetails from './POIDetails';
 
 const MapComponent = () => {
   const [userLocation, setUserLocation] = useState(null);
   const [error, setError] = useState(null);
   const [mapRegion, setMapRegion] = useState(null);
-
+  const [poiList, setPoiList] = useState([]);
   const mapReference = useRef(null);
+  const [selectedPOI, setSelectedPOI] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     initializeApp();
@@ -24,7 +29,7 @@ const MapComponent = () => {
       if (!location) {
         throw new Error(MESSAGES.LOCATION_ERROR);
       }
-
+      console.log(`Location: `, location);
       setUserLocation(location);
       const region = {
         latitude: location.latitude,
@@ -32,14 +37,27 @@ const MapComponent = () => {
         ...MAP_CONFIG.INITIAL_REGION,
       };
       setMapRegion(region);
+      const poisData = await fetchPOIs(location.latitude, location.longitude);
+      console.log('POIS EXTRACTED DATA:', JSON.stringify(poisData, null, 2));
+      setPoiList(poisData);
     } catch (error) {
       console.error('ERROR: Error during app initialization', error);
+      setPoiList([]);
       setError(err.message || 'An unexpected error occurred');
     }
   };
 
   const handleRetry = () => {
     initializeApp();
+  };
+
+  const handleMarkerPress = (poi) => {
+    setSelectedPOI(poi);
+    setModalVisible(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
   };
 
   // error screen
@@ -56,18 +74,42 @@ const MapComponent = () => {
 
   // app
   return (
-    <View style={styles.mapContainer}>
-      {mapRegion && (
-        <MapView
-          style={styles.map}
-          initialRegion={mapRegion}
-          ref={mapReference}
-          showsUserLocation={true}
-          showsMyLocationButton={true}
-          showsCompass={true}
-          showsScale={true}
-        />
-      )}
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.headerTitle}>What's Nearby?</Text>
+        <Text style={styles.headerSubtitle}>
+          Displaying restaurants and services near you.
+        </Text>
+      </View>
+      <View style={styles.mapContainer}>
+        {mapRegion && (
+          <MapView
+            style={styles.map}
+            initialRegion={mapRegion}
+            ref={mapReference}
+            showsUserLocation={true}
+            showsMyLocationButton={true}
+            showsCompass={true}
+            showsScale={true}
+          >
+            {poiList.map((poi) => (
+              <POIMarker
+                key={poi.id}
+                poi={poi}
+                onMarkerPress={handleMarkerPress}
+              />
+            ))}
+          </MapView>
+        )}
+
+        {selectedPOI && (
+          <POIDetails
+            poi={selectedPOI}
+            visible={modalVisible}
+            onClose={handleCloseModal}
+          />
+        )}
+      </View>
     </View>
   );
 };
