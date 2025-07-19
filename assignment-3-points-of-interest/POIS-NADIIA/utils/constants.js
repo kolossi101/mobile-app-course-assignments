@@ -3,6 +3,7 @@ import Constants from 'expo-constants';
 // Application messages
 export const MESSAGES = {
   LOCATION_ERROR: 'Error getting your location. Please check permissions.',
+  LOADING: 'Loading your location...',
 };
 
 export const MAP_CONFIG = {

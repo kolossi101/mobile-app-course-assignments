@@ -3,59 +3,57 @@ import { StyleSheet, Platform, StatusBar } from 'react-native';
 export const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    backgroundColor: '#fff',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
   container: {
     flex: 1,
-    backgroundColor: '#fff',
   },
   header: {
     marginTop: 10,
     paddingHorizontal: 20,
     paddingVertical: 20,
-    backgroundColor: '#f8f9fa',
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    backgroundColor: '#FAF7F3',
+    borderWidth: 1,
+    borderColor: '#F0E4D3',
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#131D4F',
   },
   headerSubtitle: {
     fontSize: 14,
-    color: '#666',
+    color: '#555879',
     marginTop: 4,
   },
   mapContainer: {
     flex: 1,
   },
   map: {
-    height: '94%',
+    flex: 1,
   },
   errorContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
     padding: 20,
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight + 20 : 20,
   },
   errorText: {
-    fontSize: 16,
+    fontSize: 20,
     color: '#e74c3c',
     textAlign: 'center',
     marginBottom: 20,
   },
   retryButton: {
-    backgroundColor: '#3498db',
+    backgroundColor: '#748DAE',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 5,
   },
   retryButtonText: {
-    color: '#fff',
+    color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
   },
@@ -71,7 +69,7 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
-    borderColor: '#fff',
+    borderColor: 'white',
   },
   serviceMarker: {
     width: 35,
@@ -81,10 +79,10 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
-    borderColor: '#fff',
+    borderColor: 'white',
   },
   markerText: {
-    color: '#fff',
+    color: 'white',
     fontSize: 12,
     fontWeight: 'bold',
   },
@@ -95,7 +93,7 @@ export const styles = StyleSheet.create({
   },
   modalCard: {
     width: '85%',
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
     borderRadius: 16,
     padding: 24,
     alignItems: 'center',
@@ -135,5 +133,19 @@ export const styles = StyleSheet.create({
     fontSize: 16,
     color: '#fff',
     fontWeight: '600',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+  },
+
+  loadingText: {
+    fontSize: 18,
+    color: '#333',
+    marginTop: 20,
+    textAlign: 'center',
   },
 });

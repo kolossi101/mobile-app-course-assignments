@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import MapView from 'react-native-maps';
 import { styles } from '../styles/styles';
 import { MESSAGES, MAP_CONFIG } from '../utils/constants';
@@ -7,15 +7,17 @@ import { getCurrentLocation } from '../services/locationService';
 import { fetchPOIs } from '../services/geoApifyService';
 import POIMarker from './POIMarker';
 import POIDetails from './POIDetails';
+import LoadingScreen from '../screens/LoadingScreen';
 
 const MapComponent = () => {
-  const [userLocation, setUserLocation] = useState(null);
   const [error, setError] = useState(null);
   const [mapRegion, setMapRegion] = useState(null);
   const [poiList, setPoiList] = useState([]);
   const mapReference = useRef(null);
   const [selectedPOI, setSelectedPOI] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [loadingMessage, setLoadingMessage] = useState(MESSAGES.LOADING);
 
   useEffect(() => {
     initializeApp();
@@ -23,27 +25,27 @@ const MapComponent = () => {
 
   const initializeApp = async () => {
     try {
+      setLoading(true);
       setError(null);
-      // Get current user location
+      setLoadingMessage(MESSAGES.LOADING);
+
       const location = await getCurrentLocation();
-      if (!location) {
-        throw new Error(MESSAGES.LOCATION_ERROR);
-      }
-      console.log(`Location: `, location);
-      setUserLocation(location);
+
       const region = {
         latitude: location.latitude,
         longitude: location.longitude,
         ...MAP_CONFIG.INITIAL_REGION,
       };
       setMapRegion(region);
+      setLoadingMessage('Loading nearby places...');
       const poisData = await fetchPOIs(location.latitude, location.longitude);
-      console.log('POIS EXTRACTED DATA:', JSON.stringify(poisData, null, 2));
       setPoiList(poisData);
+      setLoading(false);
     } catch (error) {
       console.error('ERROR: Error during app initialization', error);
       setPoiList([]);
       setError(err.message || 'An unexpected error occurred');
+      setLoading(false);
     }
   };
 
@@ -59,6 +61,10 @@ const MapComponent = () => {
   const handleCloseModal = () => {
     setModalVisible(false);
   };
+
+  if (loading) {
+    return <LoadingScreen message={loadingMessage} />;
+  }
 
   // error screen
   if (error) {

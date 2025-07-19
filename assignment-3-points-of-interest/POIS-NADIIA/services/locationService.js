@@ -1,22 +1,19 @@
 import * as Location from 'expo-location';
+import { Alert } from 'react-native';
 
 const requestLocationPermission = async () => {
   try {
     const permissionObject = await Location.requestForegroundPermissionsAsync();
-
     if (permissionObject.status === 'granted') {
       console.log('Permission Granted!');
-      //Alert.alert("Success", "Permission Granted!");
+      return true;
     } else {
-      throw new Error('ERROR: Location permission not granted');
-      //console.log('Permission Denied!');
-      //Alert.alert("Failure", "Permission Denied!");
+      console.log('Permission Denied!');
+      return false;
     }
   } catch (error) {
-    throw new Error(
-      'ERROR: An error occurred while requesting permission:',
-      error
-    );
+    console.error('An error occurred while requesting permission:', error);
+    return false;
   }
 };
 
@@ -28,12 +25,13 @@ export const getCurrentLocation = async () => {
       throw new Error('ERROR: Location services are not enabled');
     }
     // Request permission if not granted
-    await requestLocationPermission();
+    const permissionGranted = await requestLocationPermission();
+    if (!permissionGranted) {
+      throw new Error('Location permission denied');
+    }
 
     const location = await Location.getCurrentPositionAsync({
       accuracy: Location.Accuracy.High,
-      timeout: 15000, // timeout is 15 seconds
-      maximumAge: 10000, // accepting up to 10 seconds old cached location
     });
 
     return {
@@ -44,6 +42,6 @@ export const getCurrentLocation = async () => {
     };
   } catch (error) {
     console.error('ERROR: Could not get current location', error);
-    return null;
+    throw new Error(error.message || 'Could not get current location');
   }
 };
