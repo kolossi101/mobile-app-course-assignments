@@ -65,7 +65,7 @@ Make sure you have the following installed:
 
 ## Screenshots
 
-![result_map-screen](https://github.com/user-attachments/assets/eaddd948-f32c-43e0-ac51-1d0a49e5d014)
+![result_map-screen (1)](https://github.com/user-attachments/assets/f15e8331-b3aa-4966-9fa5-21046f720c89)
 
 
 ## Project Structure
