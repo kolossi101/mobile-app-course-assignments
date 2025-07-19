@@ -65,9 +65,8 @@ Make sure you have the following installed:
 
 ## Screenshots
 
-![map-screen_1_30](https://github.com/user-attachments/assets/55e4c41e-4377-4e13-adce-520488a255b3)
-![modal-service_1_30](https://github.com/user-attachments/assets/b76a4924-cba8-4f44-9572-6a1c1fd4cba1)
-![modal-restaurant_1_30](https://github.com/user-attachments/assets/3a648ae2-9eba-490a-9937-fb85f006ef8e)
+![result_map-screen](https://github.com/user-attachments/assets/eaddd948-f32c-43e0-ac51-1d0a49e5d014)
+
 
 ## Project Structure
 
