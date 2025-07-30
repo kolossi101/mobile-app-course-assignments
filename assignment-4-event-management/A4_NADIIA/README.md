@@ -52,6 +52,6 @@ https://github.com/user-attachments/assets/106b7d32-15bb-47fe-99b6-53263a236bb3
    MESSAGING_SENDER_ID=your-messaging-sender-id
    APP_ID=your-app-id
    
-5. Start the app using `npm start` or `yarn start`
-6. Make sure your Firebase project is properly configured
-7. Test on a physical or virtual device using Expo Go
+5. Start the app using `npx expo start` or `npx expo start --tunnel`
+6. Scan the QR code with Expo Go on your mobile device or run on an emulator
+7. Make sure your Firebase project is properly configured
