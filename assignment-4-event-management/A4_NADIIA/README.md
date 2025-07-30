@@ -43,13 +43,15 @@ https://github.com/user-attachments/assets/106b7d32-15bb-47fe-99b6-53263a236bb3
 1. Clone this repository
 2. Run `npm install` or `yarn install`
 3. Create `env.local` file and fill out the following secrets:
+   
    ```env
-   API_KEY=
-   AUTH_DOMAIN=
-   PROJECT_ID=
-   STORAGE_BUCKET=
-   MESSAGING_SENDER_ID=
-   APP_ID=
-4. Start the app using `npm start` or `yarn start`
-5. Make sure your Firebase project is properly configured
-6. Test on a physical or virtual device using Expo Go
+   API_KEY=your-api-key
+   AUTH_DOMAIN=your-auth-domain
+   PROJECT_ID=your-project-id
+   STORAGE_BUCKET=your-storage-bucket
+   MESSAGING_SENDER_ID=your-messaging-sender-id
+   APP_ID=your-app-id
+   
+5. Start the app using `npm start` or `yarn start`
+6. Make sure your Firebase project is properly configured
+7. Test on a physical or virtual device using Expo Go
