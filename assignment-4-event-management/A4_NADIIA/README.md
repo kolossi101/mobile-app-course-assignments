@@ -11,9 +11,9 @@ This is an Event Management App built with React Native using Expo, as part of A
 - Option to clear all favorites with confirmation
 - Data stored in Firebase Firestore
 
-## Screens
+## Demo
 
-
+https://github.com/user-attachments/assets/106b7d32-15bb-47fe-99b6-53263a236bb3
 
 ### Events List
 
