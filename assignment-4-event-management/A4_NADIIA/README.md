@@ -35,7 +35,7 @@ https://github.com/user-attachments/assets/106b7d32-15bb-47fe-99b6-53263a236bb3
 - React Native with Expo
 - React Navigation
 - Firebase Firestore
-- JavaScript or TypeScript
+- TypeScript
 - SafeAreaView for notch-safe UI
 
 ## Setup Instructions
