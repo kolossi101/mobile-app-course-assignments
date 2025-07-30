@@ -7,10 +7,16 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
-import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import {
+  doc,
+  updateDoc,
+  getDoc,
+  serverTimestamp,
+  Timestamp,
+} from 'firebase/firestore';
 import { FirebaseDB } from '../config/FirebaseConfig';
 
 type Event = {
@@ -69,8 +75,21 @@ const EventDetail: React.FC<Props> = ({ route, navigation }) => {
 
   useFocusEffect(
     useCallback(() => {
-      setAddToFavourite(event.isFavourite);
-    }, [])
+      const fetchEvent = async () => {
+        try {
+          const docRef = doc(FirebaseDB, 'EventDB', event.id);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            const updatedEvent = docSnap.data() as Event;
+            setAddToFavourite(updatedEvent.isFavourite);
+          }
+        } catch (error) {
+          console.error('Failed to fetch updated event:', error);
+        }
+      };
+
+      fetchEvent();
+    }, [event.id])
   );
 
   const handleToggleFavourite = async () => {
@@ -82,11 +101,6 @@ const EventDetail: React.FC<Props> = ({ route, navigation }) => {
         isFavourite: newState,
         updatedAt: serverTimestamp(),
       });
-      console.log(docRef);
-      //   Alert.alert(
-      //     `${event.title}`,
-      //     `Favourite status updated: ${newState ? 'Added' : 'Removed'}`
-      //   );
     } catch (error) {
       console.log(error);
     }
@@ -106,7 +120,7 @@ const EventDetail: React.FC<Props> = ({ route, navigation }) => {
           style={[
             styles.favouriteButton,
             {
-              backgroundColor: addToFavourite ? '#CCCCCC' : '#F2F2F2',
+              backgroundColor: addToFavourite ? '#C2F970' : '#F2F2F2',
             },
           ]}
           onPress={handleToggleFavourite}
@@ -115,7 +129,7 @@ const EventDetail: React.FC<Props> = ({ route, navigation }) => {
           <FontAwesome
             name={addToFavourite ? 'heart' : 'heart-o'}
             size={28}
-            color={addToFavourite ? '#e74c3c' : '#555'}
+            color={addToFavourite ? '#1B3022' : '#555'}
           />
         </TouchableOpacity>
       </View>
@@ -124,37 +138,37 @@ const EventDetail: React.FC<Props> = ({ route, navigation }) => {
       <View style={styles.headerRow}>
         <Text style={styles.title}>{event.title}</Text>
       </View>
-      <Text style={styles.label}>Organizer:</Text>
+      <Text style={styles.label}>Organizer</Text>
       <Text style={styles.value}>{event.organizer}</Text>
 
-      <Text style={styles.label}>Location:</Text>
+      <Text style={styles.label}>Location</Text>
       <Text style={styles.value}>
         {event.isOnline ? 'Online Event' : `${event.location}`}
       </Text>
 
-      <Text style={styles.label}>Start Date & Time:</Text>
+      <Text style={styles.label}>Starts</Text>
       <Text style={styles.value}>{eventStartDate}</Text>
 
-      <Text style={styles.label}>End Date & Time:</Text>
+      <Text style={styles.label}>Ends</Text>
       <Text style={styles.value}>{eventEndDate}</Text>
 
-      <Text style={styles.label}>Created At:</Text>
+      <Text style={styles.label}>Created On</Text>
       <Text style={styles.value}>{createdDate}</Text>
 
-      <Text style={styles.label}>Category:</Text>
+      <Text style={styles.label}>Event Category</Text>
       <Text style={styles.value}>{event.category}</Text>
 
-      <Text style={styles.label}>Capacity:</Text>
+      <Text style={styles.label}>Capacity</Text>
       <Text style={styles.value}>{event.capacity}</Text>
 
-      <Text style={styles.label}>Attendees:</Text>
+      <Text style={styles.label}>Attendees</Text>
       <Text style={styles.value}>
         {event.attendees.length} / {event.capacity}
       </Text>
 
       {event.description && (
         <>
-          <Text style={styles.label}>Description:</Text>
+          <Text style={styles.label}>Description</Text>
           <Text style={styles.description}>{event.description}</Text>
         </>
       )}
@@ -173,6 +187,7 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 8,
     marginBottom: 15,
+    borderColor: '#1B3022',
   },
   headerRow: {
     flexDirection: 'row',
@@ -182,9 +197,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontFamily: 'Nunito_700Bold',
     flex: 1,
     marginRight: 10,
+    color: '#1B3022',
   },
   buttonContainer: {
     flexDirection: 'row',
@@ -196,7 +212,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderRadius: 8,
-    borderColor: '#595959',
+    borderColor: '#1B3022',
     paddingVertical: 10,
     justifyContent: 'space-evenly',
     width: '48%',
@@ -207,42 +223,47 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
     width: '48%',
-    backgroundColor: '#ABDAE1',
-    borderColor: '#416165',
+    backgroundColor: '#FCAF58',
+    borderColor: '#1B3022',
   },
   favouriteButtonText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
+    fontFamily: 'Nunito_600SemiBold',
+    color: '#1B3022',
   },
   goBackButtonText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
+    color: '#1B3022',
+    fontFamily: 'Nunito_600SemiBold',
   },
   label: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: 16,
+    fontFamily: 'Nunito_600SemiBold',
     marginTop: 10,
     marginBottom: 4,
-    color: '#7a7f85',
+    color: '#1B3022',
   },
   value: {
-    fontSize: 16,
-    color: '#333',
+    fontSize: 14,
+    color: '#1B3022',
     backgroundColor: '#f4f7fb',
-    padding: 8,
+    padding: 12,
     borderRadius: 6,
+    fontFamily: 'Nunito_400Regular',
+    borderWidth: 1,
+    borderColor: '#1B3022',
   },
   description: {
     fontSize: 16,
+    fontFamily: 'Nunito_400Regular_Italic',
     color: '#444',
     lineHeight: 22,
     marginTop: 5,
     backgroundColor: '#f4f7fb',
-    padding: 10,
+    padding: 12,
     borderRadius: 6,
-    fontStyle: 'italic',
+    borderWidth: 1,
+    borderColor: '#1B3022',
   },
 });
 

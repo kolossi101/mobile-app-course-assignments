@@ -1,5 +1,6 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
+import { ActivityIndicator } from 'react-native';
 import {
   FlatList,
   StyleSheet,
@@ -17,9 +18,11 @@ const EventList: React.FC<NativeStackScreenProps<any>> = ({
   route,
 }) => {
   const [eventList, setEventList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const getAllEvents = async () => {
     try {
+      setLoading(true);
       const collectionRef = collection(FirebaseDB, 'EventDB');
 
       const eventDocs = await getDocs(collectionRef);
@@ -33,9 +36,11 @@ const EventList: React.FC<NativeStackScreenProps<any>> = ({
         localEvents.push(Event);
       });
       setEventList(localEvents);
-      console.log(localEvents);
+    
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -85,16 +90,24 @@ const EventList: React.FC<NativeStackScreenProps<any>> = ({
 
   return (
     <View style={styles.container}>
-      <FlatList
-        keyExtractor={(item) => item.id}
-        data={eventList}
-        renderItem={({ item }) => (
-          <EventItem
-            item={item}
-            onPress={() => navigation.navigate('EventDetail', { event: item })}
-          />
-        )}
-      />
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0B1D51" />
+        </View>
+      ) : (
+        <FlatList
+          keyExtractor={(item) => item.id}
+          data={eventList}
+          renderItem={({ item }) => (
+            <EventItem
+              item={item}
+              onPress={() =>
+                navigation.navigate('EventDetail', { event: item })
+              }
+            />
+          )}
+        />
+      )}
     </View>
   );
 };
@@ -111,6 +124,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f4ff',
     borderRadius: 8,
     overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#1B3022',
   },
   image: {
     width: 100,
@@ -118,7 +133,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#d6e4ff',
   },
   cardContent: { padding: 12, flex: 1, justifyContent: 'center' },
-  title: { fontSize: 16, fontWeight: '700', color: '#2d3a60', marginBottom: 4 },
+  title: {
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+    color: '#0B1D51',
+    marginBottom: 2,
+  },
   placeholder: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -127,12 +147,28 @@ const styles = StyleSheet.create({
   placeholderText: { color: '#757575', fontSize: 12, textAlign: 'center' },
   organizer: {
     fontSize: 14,
-    color: '#4e5d78',
+    color: '#0B1D51',
     marginBottom: 4,
-    fontWeight: '500',
+    fontFamily: 'Nunito_400Regular_Italic',
   },
-  date: { fontSize: 13, color: '#5c7080', marginBottom: 2 },
-  location: { fontSize: 13, color: '#1e88e5', marginBottom: 4,  },
+  date: {
+    fontSize: 11,
+    color: '#5c7080',
+    marginBottom: 2,
+    fontFamily: 'Nunito_400Regular',
+  },
+  location: {
+    fontSize: 13,
+    color: '#0B1D51',
+    marginTop: 8,
+    marginBottom: 4,
+    fontFamily: 'Nunito_400Regular',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
 
 export default EventList;

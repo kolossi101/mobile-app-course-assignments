@@ -8,6 +8,7 @@ import {
   View,
   Image,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import {
   collection,
@@ -27,9 +28,11 @@ const FavEventList: React.FC<NativeStackScreenProps<any>> = ({
   route,
 }) => {
   const [favEventList, setFavEventList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const getFavEvents = async () => {
     try {
+      setLoading(true);
       const q = query(
         collection(FirebaseDB, 'EventDB'),
         where('isFavourite', '==', true)
@@ -48,6 +51,8 @@ const FavEventList: React.FC<NativeStackScreenProps<any>> = ({
       setFavEventList(localEvents);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -89,7 +94,7 @@ const FavEventList: React.FC<NativeStackScreenProps<any>> = ({
         'All your favourites have been cleared'
       );
 
-      await getFavEvents();
+      setFavEventList([]);
     } catch (error) {
       console.log(error);
     }
@@ -167,17 +172,16 @@ const FavEventList: React.FC<NativeStackScreenProps<any>> = ({
           {item.organizer && (
             <Text style={styles.organizer}>By {item.organizer}</Text>
           )}
-
+          <Text style={styles.location}>Located in {item.location}</Text>
           <Text style={styles.date}>Starts {startDatetime}</Text>
           <Text style={styles.date}>Ends {endDatetime}</Text>
-          <Text style={styles.location}>{item.location}</Text>
         </View>
         <View style={styles.deleteArea}>
           <FontAwesome
             style={{ marginLeft: 'auto' }}
             name="trash"
             size={32}
-            color="#2d3a60"
+            color="#0B1D51"
             onPress={() => confirmDeleteItemFromFavourites(item)}
           />
         </View>
@@ -187,33 +191,39 @@ const FavEventList: React.FC<NativeStackScreenProps<any>> = ({
 
   return (
     <View style={styles.container}>
-      <View style={{ alignItems: 'center', marginVertical: 10 }}>
-        <TouchableOpacity
-          style={[
-            styles.clearFavouritesButton,
-            {
-              backgroundColor: '#CCCCCC',
-            },
-          ]}
-          onPress={confirmClearAllFavourites}
-        >
-          <Text style={styles.clearFavouritesButtonText}>
-            Clear All Favourites
-          </Text>
-          <FontAwesome name="trash" size={28} color="#333" />
-        </TouchableOpacity>
-      </View>
-
-      <FlatList
-        keyExtractor={(item) => item.id}
-        data={favEventList}
-        renderItem={({ item }) => (
-          <FavEventItem
-            item={item}
-            onPress={() => navigation.navigate('EventDetail', { event: item })}
+      {loading ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0B1D51" />
+        </View>
+      ) : (
+        <>
+          {favEventList.length > 0 && (
+            <View style={{ alignItems: 'center', marginVertical: 10 }}>
+              <TouchableOpacity
+                style={styles.clearFavouritesButton}
+                onPress={confirmClearAllFavourites}
+              >
+                <Text style={styles.clearFavouritesButtonText}>
+                  Clear All Favourites
+                </Text>
+                <FontAwesome name="trash" size={28} color="#0B1D51" />
+              </TouchableOpacity>
+            </View>
+          )}
+          <FlatList
+            keyExtractor={(item) => item.id}
+            data={favEventList}
+            renderItem={({ item }) => (
+              <FavEventItem
+                item={item}
+                onPress={() =>
+                  navigation.navigate('EventDetail', { event: item })
+                }
+              />
+            )}
           />
-        )}
-      />
+        </>
+      )}
     </View>
   );
 };
@@ -230,14 +240,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#f0f4ff',
     borderRadius: 8,
     overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#1B3022',
   },
   image: {
     width: 100,
     resizeMode: 'cover',
     backgroundColor: '#d6e4ff',
   },
-  cardContent: { padding: 12, justifyContent: 'center' },
-  title: { fontSize: 16, fontWeight: '700', color: '#2d3a60', marginBottom: 4 },
+  cardContent: { padding: 12, flex: 1, justifyContent: 'center' },
+  title: {
+    fontSize: 16,
+    fontFamily: 'Nunito_700Bold',
+    color: '#0B1D51',
+    marginBottom: 2,
+  },
   placeholder: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -246,12 +263,23 @@ const styles = StyleSheet.create({
   placeholderText: { color: '#757575', fontSize: 12, textAlign: 'center' },
   organizer: {
     fontSize: 14,
-    color: '#4e5d78',
+    color: '#0B1D51',
     marginBottom: 4,
-    fontWeight: '500',
+    fontFamily: 'Nunito_400Regular_Italic',
   },
-  date: { fontSize: 13, color: '#5c7080', marginBottom: 2 },
-  location: { fontSize: 13, color: '#1e88e5', marginBottom: 4 },
+  date: {
+    fontSize: 11,
+    color: '#5c7080',
+    marginBottom: 2,
+    fontFamily: 'Nunito_400Regular',
+  },
+  location: {
+    fontSize: 13,
+    color: '#0B1D51',
+    marginTop: 8,
+    marginBottom: 4,
+    fontFamily: 'Nunito_400Regular',
+  },
   deleteArea: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -262,15 +290,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderRadius: 8,
-    borderColor: '#595959',
+    borderColor: '#0B1D51',
     paddingVertical: 10,
     justifyContent: 'space-evenly',
     width: '75%',
+    backgroundColor: '#FCAF58',
   },
   clearFavouritesButtonText: {
     fontSize: 16,
-    fontWeight: '600',
-    color: '#333',
+    fontFamily: 'Nunito_600SemiBold',
+    color: '#0B1D51',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

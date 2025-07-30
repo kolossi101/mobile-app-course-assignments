@@ -10,30 +10,8 @@ import {
   Nunito_500Medium,
   Nunito_600SemiBold,
   Nunito_700Bold,
+  Nunito_400Regular_Italic,
 } from '@expo-google-fonts/nunito';
-
-/*
-npm install firebase
-npm install dotenv
-
-for navigation container
-npm install @react-navigation/native
-
-for Stack
-npm install @react-navigation/native-stack
-
-for navigator and screen
-npx expo install react-native-screens react-native-safe-area-context
-
-for Tab
-npm install @react-navigation/bottom-tabs
-
-for Icon
-npm install --save react-native-vector-icons
-npm install @expo/vector-icons
-
-npm i @expo-google-fonts/nunito
-*/
 
 const Tab = createBottomTabNavigator();
 
@@ -43,6 +21,7 @@ export default function App() {
     Nunito_500Medium,
     Nunito_600SemiBold,
     Nunito_700Bold,
+    Nunito_400Regular_Italic,
   });
   if (!fontsLoaded) return null;
   return (
@@ -50,20 +29,21 @@ export default function App() {
       <NavigationContainer>
         <Tab.Navigator
           screenOptions={({ route }) => ({
-            headerStyle: { backgroundColor: '#9ECE9A', borderWidth: 1 },
+            headerStyle: { backgroundColor: '#0B1D51', borderWidth: 1 },
             headerTintColor: 'black',
             headerTitleStyle: {
               padding: 5,
               fontFamily: 'Nunito_700Bold',
+              color: '#f0f4ff',
             },
             headerShown: true,
-            tabBarActiveTintColor: '#1C3738',
+            tabBarActiveTintColor: '#011638',
             tabBarLabelStyle: {
               fontSize: 12,
               fontFamily: 'Nunito_500Medium',
             },
             tabBarStyle: {
-              backgroundColor: '#EEF4ED',
+              backgroundColor: '#f0f4ff',
             },
             tabBarIcon: ({ color }) => {
               let iconName;
@@ -94,3 +74,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+/*
+npm install firebase
+npm install dotenv
+
+for navigation container
+npm install @react-navigation/native
+
+for Stack
+npm install @react-navigation/native-stack
+
+for navigator and screen
+npx expo install react-native-screens react-native-safe-area-context
+
+for Tab
+npm install @react-navigation/bottom-tabs
+
+for Icon
+npm install --save react-native-vector-icons
+npm install @expo/vector-icons
+
+npm i @expo-google-fonts/nunito
+*/
