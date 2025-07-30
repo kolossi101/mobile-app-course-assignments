@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   FlatList,
   StyleSheet,
@@ -32,37 +33,67 @@ const EventList: React.FC<NativeStackScreenProps<any>> = ({
         localEvents.push(Event);
       });
       setEventList(localEvents);
+      console.log(localEvents);
     } catch (error) {
       console.log(error);
     }
   };
 
-  useEffect(() => {
-    getAllEvents();
-  }, []);
-
-  const EventItem = ({ item }: { item: Event }) => (
-    <TouchableOpacity
-      style={styles.card}
-      onPress={() => navigation.navigate('EventDetail', { event: item })}
-    >
-      <Image source={{ uri: item.imageUrl }} style={styles.image} />
-      <View style={styles.cardContent}>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.date}>
-          {item.date.toDate().toLocaleDateString()}
-        </Text>
-        <Text style={styles.location}>{item.location}</Text>
-      </View>
-    </TouchableOpacity>
+  useFocusEffect(
+    useCallback(() => {
+      getAllEvents();
+    }, [])
   );
+
+  const EventItem = ({
+    item,
+    onPress,
+  }: {
+    item: Event;
+    onPress: () => void;
+  }) => {
+    const startDatetime = item.startDatetime.toDate().toLocaleDateString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
+    const endDatetime = item.endDatetime.toDate().toLocaleDateString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+    return (
+      <TouchableOpacity style={styles.card} onPress={onPress}>
+        {item.imageUrl ? (
+          <Image source={{ uri: item.imageUrl }} style={styles.image} />
+        ) : (
+          <View style={[styles.image, styles.placeholder]}>
+            <Text style={styles.placeholderText}>No Image</Text>
+          </View>
+        )}
+        <View style={styles.cardContent}>
+          <Text style={styles.title}>{item.title}</Text>
+          {item.organizer && (
+            <Text style={styles.organizer}>By {item.organizer}</Text>
+          )}
+          <Text style={styles.location}>Located in {item.location}</Text>
+          <Text style={styles.date}>Starts {startDatetime}</Text>
+          <Text style={styles.date}>Ends {endDatetime}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={styles.container}>
       <FlatList
         keyExtractor={(item) => item.id}
         data={eventList}
-        renderItem={({ item }) => <EventItem item={item} />}
+        renderItem={({ item }) => (
+          <EventItem
+            item={item}
+            onPress={() => navigation.navigate('EventDetail', { event: item })}
+          />
+        )}
       />
     </View>
   );
@@ -71,21 +102,37 @@ const EventList: React.FC<NativeStackScreenProps<any>> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#fdfcff',
     padding: 10,
   },
   card: {
     flexDirection: 'row',
     marginVertical: 8,
-    backgroundColor: '#f2f2f2',
+    backgroundColor: '#f0f4ff',
     borderRadius: 8,
     overflow: 'hidden',
   },
-  image: { width: 100, height: 100 },
-  cardContent: { padding: 10, flex: 1 },
-  title: { fontSize: 18, fontWeight: 'bold' },
-  date: { fontSize: 14, color: '#555' },
-  location: { fontSize: 14, color: '#999' },
+  image: {
+    width: 100,
+    resizeMode: 'cover',
+    backgroundColor: '#d6e4ff',
+  },
+  cardContent: { padding: 12, flex: 1, justifyContent: 'center' },
+  title: { fontSize: 16, fontWeight: '700', color: '#2d3a60', marginBottom: 4 },
+  placeholder: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#e0e0e0',
+  },
+  placeholderText: { color: '#757575', fontSize: 12, textAlign: 'center' },
+  organizer: {
+    fontSize: 14,
+    color: '#4e5d78',
+    marginBottom: 4,
+    fontWeight: '500',
+  },
+  date: { fontSize: 13, color: '#5c7080', marginBottom: 2 },
+  location: { fontSize: 13, color: '#1e88e5', marginBottom: 4,  },
 });
 
 export default EventList;

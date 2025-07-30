@@ -5,10 +5,10 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
-import { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { FontAwesome } from '@expo/vector-icons';
 import { doc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { FirebaseDB } from '../config/FirebaseConfig';
@@ -21,7 +21,8 @@ type Event = {
   isOnline: boolean;
   imageUrl: string;
   description?: string;
-  date: Timestamp;
+  startDatetime: Timestamp;
+  endDatetime: Timestamp;
   createdAt: Timestamp;
   updatedAt: Timestamp;
   category: string;
@@ -38,13 +39,22 @@ const EventDetail: React.FC<Props> = ({ route, navigation }) => {
   const { event } = route.params;
   const [addToFavourite, setAddToFavourite] = useState(false);
 
-  const dateObj = event.date.toDate();
+  const startDateObj = event.startDatetime.toDate();
+  const endDateObj = event.endDatetime.toDate();
   const createdAtObj = event.createdAt.toDate();
 
-  const eventDate =
-    dateObj.toLocaleDateString() +
+  const eventStartDate =
+    startDateObj.toLocaleDateString() +
     ' at ' +
-    dateObj.toLocaleTimeString([], {
+    startDateObj.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
+  const eventEndDate =
+    endDateObj.toLocaleDateString() +
+    ' at ' +
+    endDateObj.toLocaleTimeString([], {
       hour: '2-digit',
       minute: '2-digit',
     });
@@ -57,9 +67,11 @@ const EventDetail: React.FC<Props> = ({ route, navigation }) => {
       minute: '2-digit',
     });
 
-  useEffect(() => {
-    setAddToFavourite(event.isFavourite);
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      setAddToFavourite(event.isFavourite);
+    }, [])
+  );
 
   const handleToggleFavourite = async () => {
     const newState = !addToFavourite;
@@ -85,9 +97,9 @@ const EventDetail: React.FC<Props> = ({ route, navigation }) => {
       <View style={[styles.buttonContainer]}>
         <TouchableOpacity
           style={styles.goBackButton}
-          onPress={() => navigation.navigate('EventList')}
+          onPress={() => navigation.goBack()}
         >
-          <Text style={styles.favouriteButtonText}>Go Back</Text>
+          <Text style={styles.goBackButtonText}>Go Back</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -120,8 +132,11 @@ const EventDetail: React.FC<Props> = ({ route, navigation }) => {
         {event.isOnline ? 'Online Event' : `${event.location}`}
       </Text>
 
-      <Text style={styles.label}>Date:</Text>
-      <Text style={styles.value}>{eventDate}</Text>
+      <Text style={styles.label}>Start Date & Time:</Text>
+      <Text style={styles.value}>{eventStartDate}</Text>
+
+      <Text style={styles.label}>End Date & Time:</Text>
+      <Text style={styles.value}>{eventEndDate}</Text>
 
       <Text style={styles.label}>Created At:</Text>
       <Text style={styles.value}>{createdDate}</Text>
@@ -190,7 +205,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 1,
     borderRadius: 8,
-    paddingVertical: 10,
+    padding: 10,
     width: '48%',
     backgroundColor: '#ABDAE1',
     borderColor: '#416165',
@@ -200,21 +215,34 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#333',
   },
+  goBackButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+  },
   label: {
     fontSize: 14,
     fontWeight: '600',
     marginTop: 10,
-    color: '#333',
+    marginBottom: 4,
+    color: '#7a7f85',
   },
   value: {
     fontSize: 16,
-    color: '#555',
+    color: '#333',
+    backgroundColor: '#f4f7fb',
+    padding: 8,
+    borderRadius: 6,
   },
   description: {
     fontSize: 16,
     color: '#444',
     lineHeight: 22,
     marginTop: 5,
+    backgroundColor: '#f4f7fb',
+    padding: 10,
+    borderRadius: 6,
+    fontStyle: 'italic',
   },
 });
 
